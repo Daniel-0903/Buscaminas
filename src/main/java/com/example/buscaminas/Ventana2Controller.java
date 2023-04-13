@@ -51,7 +51,7 @@ public class Ventana2Controller extends Application {
     private int banderasColocadas = 0; // Variable que lleva la cuenta de las banderas colocadas
     private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
 
-    private boolean jugandoContraComputador = false;
+    private boolean jugandoContraComputador = true;
 
 
 
@@ -110,11 +110,12 @@ public class Ventana2Controller extends Application {
         primaryStage.show();
     }
 
+
     private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event) {
         descubierta[fila][columna] = true;
 
         // Si se hizo clic derecho en el botón, se coloca una bandera
-        if (event.getButton() == MouseButton.SECONDARY) {
+        if (event != null && event.getButton()== MouseButton.SECONDARY) {
             if (button.getGraphic() instanceof ImageView) {
                 button.setGraphic(null);
                 banderasColocadas--;
@@ -150,7 +151,7 @@ public class Ventana2Controller extends Application {
         // Si la casilla no contiene una mina, se muestra el número de minas adyacentes
         int minasAdyacentes = contarMinasAdyacentes(fila, columna);
         button.setText(Integer.toString(minasAdyacentes));
-
+        //jugandoContraComputador = true;
         // Si el usuario ha descubierto todas las casillas que no son minas, gana el juego
         casillasRestantes--;
         if (casillasRestantes == 0) {
@@ -175,15 +176,21 @@ public class Ventana2Controller extends Application {
         if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
             // El computador descubre una casilla aleatoria que no haya sido descubierta antes
             int filaAleatoria, columnaAleatoria;
+            jugandoContraComputador = false;
+
             do {
                 filaAleatoria = (int) (Math.random() * tablero.length);
                 columnaAleatoria = (int) (Math.random() * tablero[0].length);
             } while (tablero[filaAleatoria][columnaAleatoria] == 1 || descubierta[filaAleatoria][columnaAleatoria]);
             Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
             mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null);
-        }
 
+        }
     }
+
+
+
+
 
     // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
     private Node getNodeFromGridPane(int col, int row, GridPane gridPane) {
