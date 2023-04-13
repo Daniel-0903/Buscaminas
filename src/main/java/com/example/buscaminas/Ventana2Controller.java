@@ -53,7 +53,7 @@ public class Ventana2Controller extends Application {
 
     private boolean jugandoContraComputador = true;
 
-
+    private boolean esTurnoDelJugador = true;
 
 
 
@@ -92,7 +92,7 @@ public class Ventana2Controller extends Application {
                 button.setPrefSize(40, 40); // Establece el tamaño del botón
                 int finalJ = j;
                 int finalI = i;
-                button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event)); // Agrega un EventHandler al botón
+                button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event, true)); // Agrega un EventHandler al botón
 
                 gridPane.add(button, j, i); // Agrega el botón al GridPane
             }
@@ -111,9 +111,9 @@ public class Ventana2Controller extends Application {
     }
 
 
-    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event) {
+    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador) {
         descubierta[fila][columna] = true;
-
+        esTurnoDelJugador = !esTurnoDelJugador;
         // Si se hizo clic derecho en el botón, se coloca una bandera
         if (event != null && event.getButton()== MouseButton.SECONDARY) {
             if (button.getGraphic() instanceof ImageView) {
@@ -167,25 +167,28 @@ public class Ventana2Controller extends Application {
                     if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
                         Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
                         if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
-                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event);
+                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false);
                         }
                     }
                 }
             }
         }
+
         if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
             // El computador descubre una casilla aleatoria que no haya sido descubierta antes
             int filaAleatoria, columnaAleatoria;
-            jugandoContraComputador = false;
+            //jugandoContraComputador = false ;
+
 
             do {
                 filaAleatoria = (int) (Math.random() * tablero.length);
                 columnaAleatoria = (int) (Math.random() * tablero[0].length);
-            } while (tablero[filaAleatoria][columnaAleatoria] == 1 || descubierta[filaAleatoria][columnaAleatoria]);
+            } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 ||*/ descubierta[filaAleatoria][columnaAleatoria]);
             Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
-            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null);
+            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false);
 
         }
+
     }
 
 

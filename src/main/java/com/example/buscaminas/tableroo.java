@@ -1,13 +1,26 @@
 package com.example.buscaminas;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,139 +28,55 @@ import java.util.List;
 import static javafx.application.Application.launch;
 
 public class tableroo extends Application {
-    static int[][] casillas;
+    private int[][] tablero=
 
-    int numFilas;
-    int numColumnas;
-    int numMinas;
-    //private boolean perdio = false; // Variable que indica si el usuario ha perdido
-  //  private int casillasRestantes = casillas.length * casillas[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
+            { // Esta es la matriz de casillas que contiene la información del tablero
+                    {0, 1, 0, 0, 1, 0, 0, 0},
+                    {0, 0, 1, 0, 0, 0, 1, 0},
+                    {0, 0, 0, 1, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 1, 0, 1, 0},
+                    {0, 0, 0, 0, 0, 1, 0, 0},
+                    {1, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 1, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0}
+            };
+    private Timeline timeline;
+    private int filas;
+    private boolean[][] descubierta = new boolean[8][8];
 
-    public tableroo(int numFilas, int numColumnas, int numMinas) {
-        this.numFilas = 8;
-        this.numColumnas = 8;
-        this.numMinas = numMinas;
-        inicializar();
-
-    }
-
-    public tableroo() {
-
-    }
-
-    public void inicializar() {
-        casillas = new int[this.numFilas][this.numColumnas];
-        int[][] minas = ponerMinas();
-
-        for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j < casillas[i].length; j++) {
-                if (contiene(minas, i, j)) {
-                    casillas[i][j] = -1;
-                } else {
-                    casillas[i][j] = 0;
-                }
-            }
-        }
-    }
-    private boolean contiene(int[][] matriz, int fila, int columna) {
-        for (int i = 0; i < matriz.length; i++) {
-            if (matriz[i][0] == fila && matriz[i][1] == columna) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    private int[][] ponerMinas() {
-        int[][] minas = new int[numMinas][2];
-        int cantMinas = 0;
-
-        while (cantMinas != numMinas) {
-            int posTmpFila = (int) (Math.random() * casillas.length);
-            int posTmpCol = (int) (Math.random() * casillas[0].length);
-            if (casillas[posTmpFila][posTmpCol] != -1) {
-                casillas[posTmpFila][posTmpCol] = -1;
-                minas[cantMinas][0] = posTmpFila;
-                minas[cantMinas][1] = posTmpCol;
-                cantMinas++;
-            }
-        }
-
-        actualizarMinas();
-        return minas;
-    }
-
-    private void actualizarMinas() {
-        for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j < casillas[i].length; j++) {
-                if (casillas[i][j] == -1) {
-                    for (int k = Math.max(i - 1, 0); k <= Math.min(i + 1, casillas.length - 1); k++) {
-                        for (int l = Math.max(j - 1, 0); l <= Math.min(j + 1, casillas[k].length - 1); l++) {
-                            if (casillas[k][l] != -1) {
-                                casillas[k][l]++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private List<Integer[]> minasAlrededor(int posFila, int posCol) {
-        List<Integer[]> listaCasillas = new LinkedList<>();
-        for (int i = 0; i < 8; i++) {
-            int tmpPosFila = posFila;
-            int tmpPosCol = posCol;
-
-            switch (i) {
-                case 0:
-                    tmpPosFila--;
-                    break;                //Arriba
-                case 1:
-                    tmpPosFila--;
-                    tmpPosCol++;
-                    break;   //Arriba Derecha
-                case 2:
-                    tmpPosCol++;
-                    break;                 //Derecha
-                case 3:
-                    tmpPosCol++;
-                    tmpPosFila++;
-                    break;    //Derecha Abajo
-                case 4:
-                    tmpPosFila++;
-                    break;                //Abajo
-                case 5:
-                    tmpPosFila++;
-                    tmpPosCol--;
-                    break;    //Abajo Izquierda
-                case 6:
-                    tmpPosCol--;
-                    break;                 //Izquierda
-                case 7:
-                    tmpPosFila--;
-                    tmpPosCol--;
-                    break;                //Izquierda Abajo
-            }
-            if (tmpPosFila >= 0 && tmpPosFila < this.casillas.length && tmpPosCol >= 0 && tmpPosCol < this.casillas[0].length) {
-                Integer[] pos = {tmpPosFila, tmpPosCol};
-                listaCasillas.add(pos);
-            }
-        }
-        return listaCasillas;
-    }
-    public int[][] getCasillas() {
-        return casillas;
-    }
     private boolean perdio = false; // Variable que indica si el usuario ha perdido
-    private int casillasRestantes = casillas.length * casillas[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
+    private int casillasRestantes = tablero.length * tablero[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
+    private int segundosTranscurridos = 0;
+    private int banderasColocadas = 0; // Variable que lleva la cuenta de las banderas colocadas
+    private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
+
+    private boolean jugandoContraComputador = true;
+
+    private boolean esTurnoDelJugador = true;
+
+
+
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Buscaminas");
         primaryStage.setWidth(400);
         primaryStage.setHeight(400);
+        Label tiempoLabel = new Label("Tiempo: 0 segundos");
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            segundosTranscurridos++;
+            tiempoLabel.setText("Tiempo: " + segundosTranscurridos + " segundos");
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        GridPane mainGridPane = new GridPane();
+
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+        Label tituloLabel = new Label("Título de la aplicación");
+        vbox.getChildren().addAll(tituloLabel, tiempoLabel);
+        mainGridPane.add(vbox, 0, 0, tablero[0].length, 1);
 
         // Crea un objeto GridPane para el tablero de juego
         GridPane gridPane = new GridPane();
@@ -156,23 +85,51 @@ public class tableroo extends Application {
         gridPane.setVgap(5);
 
         // Recorre la matriz de casillas y crea un botón para cada casilla
-        for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j < casillas[0].length; j++) {
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[0].length; j++) {
                 Button button = new Button();
                 button.setPrefSize(40, 40); // Establece el tamaño del botón
                 int finalJ = j;
                 int finalI = i;
-                button.setOnAction(event -> mostrarContenidoCasilla(button, finalI, finalJ)); // Agrega un EventHandler al botón
+                button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event, true)); // Agrega un EventHandler al botón
+
                 gridPane.add(button, j, i); // Agrega el botón al GridPane
             }
+
         }
+        // Agregar los elementos al gridPane principal
+        mainGridPane.add(tituloLabel, 0, 0);
+        mainGridPane.add(gridPane, 0, 1);
+        GridPane.setConstraints(gridPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+
+        iniciarTemporizador();
+
         // Asigna el GridPane a la escena y muestra la ventana
-        primaryStage.setScene(new Scene(gridPane));
+        primaryStage.setScene(new Scene(mainGridPane));
         primaryStage.show();
     }
 
-    private void mostrarContenidoCasilla(Button button, int fila, int columna) {
-        int contenido = casillas[fila][columna];
+
+    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador) {
+        descubierta[fila][columna] = true;
+        esTurnoDelJugador = !esTurnoDelJugador;
+        // Si se hizo clic derecho en el botón, se coloca una bandera
+        if (event != null && event.getButton()== MouseButton.SECONDARY) {
+            if (button.getGraphic() instanceof ImageView) {
+                button.setGraphic(null);
+                banderasColocadas--;
+            } else {
+                ImageView bandera = new ImageView(new Image("file:src/bandera.jpg"));
+                button.setGraphic(bandera);
+                banderasColocadas++;
+                // Si se han colocado todas las banderas necesarias para cubrir todas las minas, el jugador gana
+                if (banderasColocadas == 10 && minasEncontradas == 10) {
+                    mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
+                }
+            }
+            return;
+        }
+        int contenido = tablero[fila][columna];
         button.setText(String.valueOf(contenido));
         // Si el usuario ya perdió el juego, no se hace nada
         if (perdio) {
@@ -180,22 +137,71 @@ public class tableroo extends Application {
         }
 
         // Si la casilla contiene una mina, el usuario pierde el juego
-        if (casillas[fila][columna] == 1) {
+        if (tablero[fila][columna] == 1) {
             button.setText("X");
+            button.setStyle("-fx-background-color: red");
             perdio = true;
+            timeline.stop(); // Detiene el temporizador
             mostrarAlerta("Perdiste", "Has encontrado una mina. ¡Perdiste el juego!");
+
             return;
         }
 
         // Si la casilla no contiene una mina, se muestra el número de minas adyacentes
         int minasAdyacentes = contarMinasAdyacentes(fila, columna);
         button.setText(Integer.toString(minasAdyacentes));
-
+        //jugandoContraComputador = true;
         // Si el usuario ha descubierto todas las casillas que no son minas, gana el juego
         casillasRestantes--;
         if (casillasRestantes == 0) {
             mostrarAlerta("Ganaste", "¡Felicidades! Has descubierto todas las casillas que no son minas y ganaste el juego.");
         }
+
+        // Si la casilla no tiene minas adyacentes, se llama la función recursivamente para mostrar las casillas adyacentes
+        if (minasAdyacentes == 0) {
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    int filaActual = fila + i;
+                    int columnaActual = columna + j;
+                    if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
+                        Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
+                        if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
+                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
+            // El computador descubre una casilla aleatoria que no haya sido descubierta antes
+            int filaAleatoria, columnaAleatoria;
+            //jugandoContraComputador = false ;
+
+
+            do {
+                filaAleatoria = (int) (Math.random() * tablero.length);
+                columnaAleatoria = (int) (Math.random() * tablero[0].length);
+            } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 ||*/ descubierta[filaAleatoria][columnaAleatoria]);
+            Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
+            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false);
+
+        }
+
+    }
+
+
+
+
+
+    // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
+    private Node getNodeFromGridPane(int col, int row, GridPane gridPane) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
     }
 
     private int contarMinasAdyacentes(int fila, int columna) {
@@ -204,13 +210,16 @@ public class tableroo extends Application {
             for (int j = -1; j <= 1; j++) {
                 int filaActual = fila + i;
                 int columnaActual = columna + j;
-                if (filaActual >= 0 && filaActual < casillas.length && columnaActual >= 0 && columnaActual < casillas[0].length && casillas[filaActual][columnaActual] == 1) {
+                if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length && tablero[filaActual][columnaActual] == 1) {
                     contador++;
                 }
             }
         }
         return contador;
     }
+
+
+
 
     /**
      * Muestra una alerta en la pantalla.
@@ -223,8 +232,16 @@ public class tableroo extends Application {
         alert.showAndWait();
     }
 
+
+    private void iniciarTemporizador() {
+        timeline.playFromStart();
+
+    }
+
+
     public static void main(String[] args) {
         launch(args);
     }
+
 }
 
