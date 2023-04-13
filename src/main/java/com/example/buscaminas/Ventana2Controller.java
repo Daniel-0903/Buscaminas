@@ -52,12 +52,7 @@ public class Ventana2Controller extends Application {
     private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
 
     private boolean jugandoContraComputador = true;
-
     private boolean esTurnoDelJugador = true;
-
-
-
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Buscaminas");
@@ -109,8 +104,6 @@ public class Ventana2Controller extends Application {
         primaryStage.setScene(new Scene(mainGridPane));
         primaryStage.show();
     }
-
-
     private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador) {
         descubierta[fila][columna] = true;
         esTurnoDelJugador = !esTurnoDelJugador;
@@ -191,10 +184,6 @@ public class Ventana2Controller extends Application {
 
     }
 
-
-
-
-
     // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
     private Node getNodeFromGridPane(int col, int row, GridPane gridPane) {
         for (Node node : gridPane.getChildren()) {
@@ -218,9 +207,6 @@ public class Ventana2Controller extends Application {
         }
         return contador;
     }
-
-    
-
 
     /**
      * Muestra una alerta en la pantalla.

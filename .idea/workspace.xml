@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="820c2790-4be4-4f2d-bf4e-a62b8cceb66b" name="Changes" comment="commit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/VentanaPrincipal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java" afterDir="false" />
     </list>
@@ -128,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681375045027</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="commit">
+      <created>1681379959659</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1681379959659</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -166,6 +174,11 @@
           <line>5</line>
           <properties field="buscaminas" class="com.example.buscaminas.buscaminasapp" />
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java</url>
+          <line>214</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
