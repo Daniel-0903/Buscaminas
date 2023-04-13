@@ -29,7 +29,6 @@ import javafx.util.Duration;
 import java.util.Random;
 
 public class Ventana2Controller extends Application {
-    gridint tab = new gridint();
     private int[][] tablero=
 
     { // Esta es la matriz de casillas que contiene la información del tablero
@@ -54,9 +53,8 @@ public class Ventana2Controller extends Application {
 
     private boolean jugandoContraComputador = false;
 
-    private int casillasDescubiertas = 0;
 
-    private int casillasDescubiertasComputador = 0;
+
 
 
 
