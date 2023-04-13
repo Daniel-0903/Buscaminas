@@ -113,6 +113,8 @@ public class Ventana2Controller extends Application {
     }
 
     private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event) {
+        descubierta[fila][columna] = true;
+
         // Si se hizo clic derecho en el botón, se coloca una bandera
         if (event.getButton() == MouseButton.SECONDARY) {
             if (button.getGraphic() instanceof ImageView) {
