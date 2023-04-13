@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="820c2790-4be4-4f2d-bf4e-a62b8cceb66b" name="Changes" comment="commit">
-      <change afterPath="$PROJECT_DIR$/src/bandera.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bandera1.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +45,12 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "last_opened_file_path": "C:/Users/dgonz/OneDrive/Escritorio/TEC/III SEMESTRE/DATOS I/Buscaminas/src/main/resources/com/example/buscaminas/hello-view.fxml"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "module",
+      "directory"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -89,8 +94,26 @@
       <option name="project" value="LOCAL" />
       <updated>1680662614360</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="commit">
+      <created>1681273475111</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1681273475179</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

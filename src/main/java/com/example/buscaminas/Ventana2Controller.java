@@ -44,6 +44,7 @@ public class Ventana2Controller extends Application {
     };
     private Timeline timeline;
     private int filas;
+    private boolean[][] descubierta = new boolean[8][8];
 
     private boolean perdio = false; // Variable que indica si el usuario ha perdido
     private int casillasRestantes = tablero.length * tablero[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
@@ -51,7 +52,13 @@ public class Ventana2Controller extends Application {
     private int banderasColocadas = 0; // Variable que lleva la cuenta de las banderas colocadas
     private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
 
-    private boolean modoDummy = false;
+    private boolean jugandoContraComputador = false;
+
+    private int casillasDescubiertas = 0;
+
+    private int casillasDescubiertasComputador = 0;
+
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -165,6 +172,17 @@ public class Ventana2Controller extends Application {
                 }
             }
         }
+        if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
+            // El computador descubre una casilla aleatoria que no haya sido descubierta antes
+            int filaAleatoria, columnaAleatoria;
+            do {
+                filaAleatoria = (int) (Math.random() * tablero.length);
+                columnaAleatoria = (int) (Math.random() * tablero[0].length);
+            } while (tablero[filaAleatoria][columnaAleatoria] == 1 || descubierta[filaAleatoria][columnaAleatoria]);
+            Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
+            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null);
+        }
+
     }
 
     // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
