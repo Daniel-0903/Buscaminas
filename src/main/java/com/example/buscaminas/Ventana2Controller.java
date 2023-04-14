@@ -70,7 +70,7 @@ public class Ventana2Controller extends Application {
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(10);
-        Label tituloLabel = new Label("Título de la aplicación");
+        Label tituloLabel = new Label("DUMMY LEVEL");
         vbox.getChildren().addAll(tituloLabel, tiempoLabel);
         mainGridPane.add(vbox, 0, 0, tablero[0].length, 1);
 
