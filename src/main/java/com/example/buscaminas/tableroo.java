@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,60 +58,8 @@ public class tableroo extends Application {
 
 
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Buscaminas");
-        primaryStage.setWidth(400);
-        primaryStage.setHeight(400);
-        Label tiempoLabel = new Label("Tiempo: 0 segundos");
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            segundosTranscurridos++;
-            tiempoLabel.setText("Tiempo: " + segundosTranscurridos + " segundos");
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        GridPane mainGridPane = new GridPane();
-
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(10);
-        Label tituloLabel = new Label("ADVANCED LEVEL");
-        vbox.getChildren().addAll(tituloLabel, tiempoLabel);
-        mainGridPane.add(vbox, 0, 0, tablero[0].length, 1);
-
-        // Crea un objeto GridPane para el tablero de juego
-        GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10));
-        gridPane.setHgap(5);
-        gridPane.setVgap(5);
-
-        // Recorre la matriz de casillas y crea un botón para cada casilla
-        for (int i = 0; i < tablero.length; i++) {
-            for (int j = 0; j < tablero[0].length; j++) {
-                Button button = new Button();
-                button.setPrefSize(40, 40); // Establece el tamaño del botón
-                int finalJ = j;
-                int finalI = i;
-                button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event, true)); // Agrega un EventHandler al botón
-
-                gridPane.add(button, j, i); // Agrega el botón al GridPane
-            }
-
-        }
-        // Agregar los elementos al gridPane principal
-        mainGridPane.add(tituloLabel, 0, 0);
-        mainGridPane.add(gridPane, 0, 1);
-        GridPane.setConstraints(gridPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
-
-        iniciarTemporizador();
-
-        // Asigna el GridPane a la escena y muestra la ventana
-        primaryStage.setScene(new Scene(mainGridPane));
-        primaryStage.show();
-    }
-
-
-    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador) {
+    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador, LinkedList<Pair<Integer, Integer>> listaSegura) {
         descubierta[fila][columna] = true;
         esTurnoDelJugador = !esTurnoDelJugador;
         // Si se hizo clic derecho en el botón, se coloca una bandera
@@ -166,7 +115,7 @@ public class tableroo extends Application {
                     if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
                         Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
                         if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
-                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false);
+                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false, listaSegura);
                         }
                     }
                 }
@@ -184,14 +133,144 @@ public class tableroo extends Application {
                 columnaAleatoria = (int) (Math.random() * tablero[0].length);
             } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 ||*/ descubierta[filaAleatoria][columnaAleatoria]);
             Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
-            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false);
+            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false, listaSegura);
 
         }
 
     }
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Buscaminas");
+        primaryStage.setWidth(400);
+        primaryStage.setHeight(400);
+        Label tiempoLabel = new Label("Tiempo: 0 segundos");
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            segundosTranscurridos++;
+            tiempoLabel.setText("Tiempo: " + segundosTranscurridos + " segundos");
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        GridPane mainGridPane = new GridPane();
+
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+        Label tituloLabel = new Label("ADVANCED LEVEL");
+        vbox.getChildren().addAll(tituloLabel, tiempoLabel);
+        mainGridPane.add(vbox, 0, 0, tablero[0].length, 1);
+
+        // Crea un objeto GridPane para el tablero de juego
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+
+        // Recorre la matriz de casillas y crea un botón para cada casilla
+            for (int i = 0; i < tablero.length; i++) {
+                for (int j = 0; j < tablero[0].length; j++) {
+                    Button button = new Button();
+                    button.setPrefSize(40, 40); // Establece el tamaño del botón
+                    int finalJ = j;
+                    int finalI = i;
+                    button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event, true, listaSegura)); // Agrega un EventHandler al botón
+
+                    gridPane.add(button, j, i); // Agrega el botón al GridPane
+                }
+
+            }
+            // Agregar los elementos al gridPane principal
+            mainGridPane.add(tituloLabel, 0, 0);
+            mainGridPane.add(gridPane, 0, 1);
+            GridPane.setConstraints(gridPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+
+            iniciarTemporizador();
+
+            // Asigna el GridPane a la escena y muestra la ventana
+            primaryStage.setScene(new Scene(mainGridPane));
+            primaryStage.show();
+        }
+
+/**
+        private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador, LinkedList<Pair<Integer, Integer>> listaSegura) {
+            descubierta[fila][columna] = true;
+            esTurnoDelJugador = !esTurnoDelJugador;
+            // Si se hizo clic derecho en el botón, se coloca una bandera
+            if (event != null && event.getButton()== MouseButton.SECONDARY) {
+                if (button.getGraphic() instanceof ImageView) {
+                    button.setGraphic(null);
+                    banderasColocadas--;
+                } else {
+                    ImageView bandera = new ImageView(new Image("file:src/bandera.jpg"));
+                    button.setGraphic(bandera);
+                    banderasColocadas++;
+                    // Si se han colocado todas las banderas necesarias para cubrir todas las minas, el jugador gana
+                    if (banderasColocadas == 10 && minasEncontradas == 10) {
+                        mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
+                    }
+                }
+                return;
+            }
+            int contenido = tablero[fila][columna];
+            button.setText(String.valueOf(contenido));
+            // Si el usuario ya perdió el juego, no se hace nada
+            if (perdio) {
+                return;
+            }
+
+            // Si la casilla contiene una mina, el usuario pierde el juego
+            if (tablero[fila][columna] == 1) {
+                button.setText("X");
+                button.setStyle("-fx-background-color: red");
+                perdio = true;
+                timeline.stop(); // Detiene el temporizador
+                mostrarAlerta("Perdiste", "Has encontrado una mina. ¡Perdiste el juego!");
+
+                return;
+            }
+
+        // Si la casilla no contiene una mina, se muestra el número de minas adyacentes
+        int minasAdyacentes = contarMinasAdyacentes(fila, columna);
+        button.setText(Integer.toString(minasAdyacentes));
+        //jugandoContraComputador = true;
+        // Si el usuario ha descubierto todas las casillas que no son minas, gana el juego
+        casillasRestantes--;
+        if (casillasRestantes == 0) {
+            mostrarAlerta("Ganaste", "¡Felicidades! Has descubierto todas las casillas que no son minas y ganaste el juego.");
+        }
+
+        // Si la casilla no tiene minas adyacentes, se llama la función recursivamente para mostrar las casillas adyacentes
+        if (minasAdyacentes == 0) {
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    int filaActual = fila + i;
+                    int columnaActual = columna + j;
+                    if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
+                        Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
+                        if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
+                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false, listaSegura);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
+            // El computador descubre una casilla aleatoria que no haya sido descubierta antes
+            int filaAleatoria, columnaAleatoria;
+            //jugandoContraComputador = false ;
 
 
+            do {
+                filaAleatoria = (int) (Math.random() * tablero.length);
+                columnaAleatoria = (int) (Math.random() * tablero[0].length);
+            } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 || descubierta[filaAleatoria][columnaAleatoria]);
+            Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
+            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false, listaSegura);
 
+        }
+
+    }
+**/
 
 
     // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
