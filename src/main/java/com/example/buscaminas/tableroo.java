@@ -23,128 +23,43 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static javafx.application.Application.launch;
 
 public class tableroo extends Application {
-    private int[][] tablero=
+    Grid tablero = new Grid(8, 8, 10);
 
-            { // Esta es la matriz de casillas que contiene la información del tablero
-                    {0, 1, 0, 0, 1, 0, 0, 0},
-                    {0, 0, 1, 0, 0, 0, 1, 0},
-                    {0, 0, 0, 1, 0, 0, 0, 0},
-                    {0, 0, 0, 0, 1, 0, 1, 0},
-                    {0, 0, 0, 0, 0, 1, 0, 0},
-                    {1, 0, 0, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 0, 0, 0, 0, 0},
-                    {0, 0, 0, 0, 0, 0, 0, 0}
-            };
     private Timeline timeline;
     private int filas;
-    private boolean[][] descubierta = new boolean[8][8];
+    //private boolean[][] descubierta = new boolean[8][8];
 
     private boolean perdio = false; // Variable que indica si el usuario ha perdido
-    private int casillasRestantes = tablero.length * tablero[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
+    //private int casillasRestantes = tablero.length * tablero[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
     private int segundosTranscurridos = 0;
     private int banderasColocadas = 0; // Variable que lleva la cuenta de las banderas colocadas
     private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
 
     private boolean jugandoContraComputador = true;
 
-    private boolean esTurnoDelJugador = true;
+    private boolean esTurnoDelJugador = false;
+    public Button[][] botmatriz = new Button[8][8];
+    Lista listaGeneral = new Lista();
+    Lista listaSegura = new Lista();
+    Lista listaIncertidumbre = new Lista();
 
 
-
-
-
-    private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador, LinkedList<Pair<Integer, Integer>> listaSegura) {
-        descubierta[fila][columna] = true;
-        esTurnoDelJugador = !esTurnoDelJugador;
-        // Si se hizo clic derecho en el botón, se coloca una bandera
-        if (event != null && event.getButton()== MouseButton.SECONDARY) {
-            if (button.getGraphic() instanceof ImageView) {
-                button.setGraphic(null);
-                banderasColocadas--;
-            } else {
-                ImageView bandera = new ImageView(new Image("file:src/bandera.jpg"));
-                button.setGraphic(bandera);
-                banderasColocadas++;
-                // Si se han colocado todas las banderas necesarias para cubrir todas las minas, el jugador gana
-                if (banderasColocadas == 10 && minasEncontradas == 10) {
-                    mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
-                }
-            }
-            return;
-        }
-        int contenido = tablero[fila][columna];
-        button.setText(String.valueOf(contenido));
-        // Si el usuario ya perdió el juego, no se hace nada
-        if (perdio) {
-            return;
-        }
-
-        // Si la casilla contiene una mina, el usuario pierde el juego
-        if (tablero[fila][columna] == 1) {
-            button.setText("X");
-            button.setStyle("-fx-background-color: red");
-            perdio = true;
-            timeline.stop(); // Detiene el temporizador
-            mostrarAlerta("Perdiste", "Has encontrado una mina. ¡Perdiste el juego!");
-
-            return;
-        }
-
-        // Si la casilla no contiene una mina, se muestra el número de minas adyacentes
-        int minasAdyacentes = contarMinasAdyacentes(fila, columna);
-        button.setText(Integer.toString(minasAdyacentes));
-        //jugandoContraComputador = true;
-        // Si el usuario ha descubierto todas las casillas que no son minas, gana el juego
-        casillasRestantes--;
-        if (casillasRestantes == 0) {
-            mostrarAlerta("Ganaste", "¡Felicidades! Has descubierto todas las casillas que no son minas y ganaste el juego.");
-        }
-
-        // Si la casilla no tiene minas adyacentes, se llama la función recursivamente para mostrar las casillas adyacentes
-        if (minasAdyacentes == 0) {
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    int filaActual = fila + i;
-                    int columnaActual = columna + j;
-                    if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
-                        Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
-                        if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
-                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false, listaSegura);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
-            // El computador descubre una casilla aleatoria que no haya sido descubierta antes
-            int filaAleatoria, columnaAleatoria;
-            //jugandoContraComputador = false ;
-
-
-            do {
-                filaAleatoria = (int) (Math.random() * tablero.length);
-                columnaAleatoria = (int) (Math.random() * tablero[0].length);
-            } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 ||*/ descubierta[filaAleatoria][columnaAleatoria]);
-            Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
-            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false, listaSegura);
-
-        }
-
-    }
     @Override
+
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Buscaminas");
         primaryStage.setWidth(400);
         primaryStage.setHeight(400);
         Label tiempoLabel = new Label("Tiempo: 0 segundos");
-
+        tablero.inicializar();
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             segundosTranscurridos++;
             tiempoLabel.setText("Tiempo: " + segundosTranscurridos + " segundos");
@@ -157,7 +72,7 @@ public class tableroo extends Application {
         vbox.setSpacing(10);
         Label tituloLabel = new Label("ADVANCED LEVEL");
         vbox.getChildren().addAll(tituloLabel, tiempoLabel);
-        mainGridPane.add(vbox, 0, 0, tablero[0].length, 1);
+        mainGridPane.add(vbox, 0, 0, 8, 1);
 
         // Crea un objeto GridPane para el tablero de juego
         GridPane gridPane = new GridPane();
@@ -166,139 +81,178 @@ public class tableroo extends Application {
         gridPane.setVgap(5);
 
         // Recorre la matriz de casillas y crea un botón para cada casilla
-            for (int i = 0; i < tablero.length; i++) {
-                for (int j = 0; j < tablero[0].length; j++) {
-                    Button button = new Button();
-                    button.setPrefSize(40, 40); // Establece el tamaño del botón
-                    int finalJ = j;
-                    int finalI = i;
-                    button.setOnMousePressed(event -> mostrarContenidoCasilla(button, finalI, finalJ, event, true, listaSegura)); // Agrega un EventHandler al botón
-
-                    gridPane.add(button, j, i); // Agrega el botón al GridPane
-                }
-
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Button button = new Button();
+                botmatriz[i][j] = button;
+                button.setPrefSize(40, 40); // Establece el tamaño del botón
+                int finalJ = j;
+                int finalI = i;
+                button.setOnMousePressed(event -> Turno(tablero, new Random(), esTurnoDelJugador)); // Agrega un EventHandler al botón
+                gridPane.add(button, j, i); // Agrega el botón al GridPane
             }
-            // Agregar los elementos al gridPane principal
-            mainGridPane.add(tituloLabel, 0, 0);
-            mainGridPane.add(gridPane, 0, 1);
-            GridPane.setConstraints(gridPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
 
-            iniciarTemporizador();
-
-            // Asigna el GridPane a la escena y muestra la ventana
-            primaryStage.setScene(new Scene(mainGridPane));
-            primaryStage.show();
         }
+        // Agregar los elementos al gridPane principal
+        mainGridPane.add(tituloLabel, 0, 0);
+        mainGridPane.add(gridPane, 0, 1);
+        GridPane.setConstraints(gridPane, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
 
-/**
-        private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador, LinkedList<Pair<Integer, Integer>> listaSegura) {
-            descubierta[fila][columna] = true;
-            esTurnoDelJugador = !esTurnoDelJugador;
-            // Si se hizo clic derecho en el botón, se coloca una bandera
-            if (event != null && event.getButton()== MouseButton.SECONDARY) {
-                if (button.getGraphic() instanceof ImageView) {
-                    button.setGraphic(null);
-                    banderasColocadas--;
-                } else {
-                    ImageView bandera = new ImageView(new Image("file:src/bandera.jpg"));
-                    button.setGraphic(bandera);
-                    banderasColocadas++;
-                    // Si se han colocado todas las banderas necesarias para cubrir todas las minas, el jugador gana
-                    if (banderasColocadas == 10 && minasEncontradas == 10) {
-                        mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
+        iniciarTemporizador();
+
+        // Asigna el GridPane a la escena y muestra la ventana
+        primaryStage.setScene(new Scene(mainGridPane));
+        primaryStage.show();
+    }
+
+
+    public void Turno(Grid tablero, Random random, boolean turno) {
+        if (!turno) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    int fila = i;
+                    int columna = j;
+                    int finalI = i;
+                    int finalJ = j;
+
+                    botmatriz[i][j].setOnMouseClicked((MouseEvent event) -> {
+                        int Columna = GridPane.getRowIndex(botmatriz[fila][columna]);
+                        int Fila = GridPane.getColumnIndex(botmatriz[fila][columna]);
+                        if (event.getButton() == MouseButton.PRIMARY) {
+                            botmatriz[Fila][Columna].setDisable(true);
+                            if (tablero.casillaTablero[Fila][Columna].isMina()) {
+                                botmatriz[finalI][finalJ].setGraphic(null);
+                                for (int k = 0; k < 8; k++) {
+                                    for (int l = 0; l < 8; l++) {
+                                        botmatriz[k][l].setDisable(true);
+                                    }
+                                }
+                                mostrarAlerta("Perdiste", "PERDISTE EL JUEGO AL DESCUBRIR UNA MINA");
+                                timeline.stop();
+                                return;
+                            } else {
+                                botmatriz[fila][columna].setStyle("-fx-background-color: red");
+                                botmatriz[fila][columna].setDisable(true);
+                                tablero.revelarCeldasSinPistas(Fila, Columna);
+                                esTurnoDelJugador = true;
+                                Turno(tablero, random, esTurnoDelJugador);
+                            }
+                        } else if (event.getButton() == MouseButton.SECONDARY) {
+                            // Realizar acción para clic derecho
+                            if (botmatriz[Fila][Columna].getGraphic() instanceof ImageView) {
+                                botmatriz[Fila][Columna].setGraphic(null);
+                                banderasColocadas--;
+                            } else {
+                                ImageView bandera = new ImageView(new Image("file:src/bandera.jpg"));
+                                botmatriz[Fila][Columna].setGraphic(bandera);
+                                banderasColocadas++;
+                                // Si se han colocado todas las banderas necesarias para cubrir todas las minas, el jugador gana
+                                if (banderasColocadas == 10 && minasEncontradas == 10) {
+                                    mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
+                                }
+                            }
+                            return;
+
+                        }
+                    });
+                }
+            }
+        }
+    else {
+
+
+            listaGeneral.del();
+            listaIncertidumbre.del();
+            listaSegura.del();
+
+            for (
+                    int i = 0;
+                    i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (tablero.casillaTablero[i][j].isAbierta() == false) {
+                        int[] elnodo = new int[2];
+                        elnodo[0] = i;
+                        elnodo[1] = j;
+                        Nodo Nodito = new Nodo(elnodo);
+                        listaGeneral.add(Nodito);
                     }
                 }
-                return;
             }
-            int contenido = tablero[fila][columna];
-            button.setText(String.valueOf(contenido));
-            // Si el usuario ya perdió el juego, no se hace nada
-            if (perdio) {
-                return;
-            }
-
-            // Si la casilla contiene una mina, el usuario pierde el juego
-            if (tablero[fila][columna] == 1) {
-                button.setText("X");
-                button.setStyle("-fx-background-color: red");
-                perdio = true;
-                timeline.stop(); // Detiene el temporizador
-                mostrarAlerta("Perdiste", "Has encontrado una mina. ¡Perdiste el juego!");
-
-                return;
-            }
-
-        // Si la casilla no contiene una mina, se muestra el número de minas adyacentes
-        int minasAdyacentes = contarMinasAdyacentes(fila, columna);
-        button.setText(Integer.toString(minasAdyacentes));
-        //jugandoContraComputador = true;
-        // Si el usuario ha descubierto todas las casillas que no son minas, gana el juego
-        casillasRestantes--;
-        if (casillasRestantes == 0) {
-            mostrarAlerta("Ganaste", "¡Felicidades! Has descubierto todas las casillas que no son minas y ganaste el juego.");
-        }
-
-        // Si la casilla no tiene minas adyacentes, se llama la función recursivamente para mostrar las casillas adyacentes
-        if (minasAdyacentes == 0) {
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    int filaActual = fila + i;
-                    int columnaActual = columna + j;
-                    if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length) {
-                        Button buttonActual = (Button) getNodeFromGridPane(columnaActual, filaActual, (GridPane) button.getParent());
-                        if (!buttonActual.getText().equals(Integer.toString(contarMinasAdyacentes(filaActual, columnaActual)))) {
-                            mostrarContenidoCasilla(buttonActual, filaActual, columnaActual,event, false, listaSegura);
+            for (
+                    int i = 0;
+                    i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (listaGeneral.search(i, j) != null) {
+                        if (!tablero.casillaTablero[i][j].isMina() && !listaGeneral.search(i, j).get_EsSeguro()) {
+                            int[] elnodo = new int[2];
+                            elnodo[0] = i;
+                            elnodo[1] = j;
+                            Nodo Elnodo = new Nodo(elnodo);
+                            listaSegura.add(Elnodo);
+                            Elnodo.setEsSeguro();
+                        } else if (tablero.casillaTablero[i][j].isMina() && !listaGeneral.search(i, j).get_EsPosible()) {
+                            int[] nodito = new int[2];
+                            nodito[0] = i;
+                            nodito[1] = j;
+                            Nodo Nodito = new Nodo(nodito);
+                            listaIncertidumbre.add(Nodito);
+                            Nodito.setEsPosible();
                         }
                     }
+
                 }
             }
-        }
+            System.out.println("Tamaño lista segura" + listaSegura.getSize());
+            System.out.println("No hay minas: " + listaSegura);
+            System.out.println("Puede haber minas: " + listaIncertidumbre);
 
-        if (jugandoContraComputador && !perdio && casillasRestantes > 0) {
-            // El computador descubre una casilla aleatoria que no haya sido descubierta antes
-            int filaAleatoria, columnaAleatoria;
-            //jugandoContraComputador = false ;
+            if (listaSegura.getSize() <= 0) {
+                System.out.println("Es mina");
+                Nodo Nnodo = listaIncertidumbre.searchRand();
+                int[] Nnodo_pos = new int[2];
+                Nnodo_pos[0] = Nnodo.get_X();
+                Nnodo_pos[1] = Nnodo.get_Y();
+
+                int x = Nnodo_pos[0];
+                int y = Nnodo_pos[1];
+
+                if (tablero.casillaTablero[x][y].isMina()) {
+                    botmatriz[x][y].setDisable(true);
+                    botmatriz[x][y].setGraphic(null);
+                    botmatriz[x][y].setStyle("-fx-background-color: green");
+
+                    for (int f = 0; f < 8; f++) {
+                        for (int jj = 0; jj < 8; jj++) {
+                            botmatriz[f][jj].setDisable(true);
 
 
-            do {
-                filaAleatoria = (int) (Math.random() * tablero.length);
-                columnaAleatoria = (int) (Math.random() * tablero[0].length);
-            } while (/*tablero[filaAleatoria][columnaAleatoria] == 1 || descubierta[filaAleatoria][columnaAleatoria]);
-            Button buttonAleatorio = (Button) getNodeFromGridPane(columnaAleatoria, filaAleatoria, (GridPane) button.getParent());
-            mostrarContenidoCasilla(buttonAleatorio, filaAleatoria, columnaAleatoria, null, false, listaSegura);
+                        }
+                    }
 
-        }
+                    mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");                }
 
-    }
-**/
+            } else {
+                System.out.println("No hay bomba, se supone");
+                Nodo Nodote_refo = listaSegura.searchRand();
+                int[] nodote_refo = new int[2];
+                nodote_refo[0] = Nodote_refo.get_X();
+                nodote_refo[1] = Nodote_refo.get_Y();
 
+                int x_refo = nodote_refo[0];
+                int y_refo = nodote_refo[1];
+                botmatriz[x_refo][y_refo].setDisable(true);
+                tablero.generarNumAdy();
+                if (tablero.casillaTablero[x_refo][y_refo].getNumMinasAlrededor() != 0) {
+                    System.out.println("Entro al if");
 
-    // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
-    private Node getNodeFromGridPane(int col, int row, GridPane gridPane) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    private int contarMinasAdyacentes(int fila, int columna) {
-        int contador = 0;
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                int filaActual = fila + i;
-                int columnaActual = columna + j;
-                if (filaActual >= 0 && filaActual < tablero.length && columnaActual >= 0 && columnaActual < tablero[0].length && tablero[filaActual][columnaActual] == 1) {
-                    contador++;
+                    tablero.casillaTablero[x_refo][y_refo].setText(tablero.casillaTablero[x_refo][y_refo].getNumMinasAlrededor() + "");
                 }
+                tablero.revelarCeldasSinPistas(x_refo, y_refo);
+                esTurnoDelJugador=false;
+                Turno(tablero, random, esTurnoDelJugador);
             }
-        }
-        return contador;
-    }
 
-
-
+        }}
 
     /**
      * Muestra una alerta en la pantalla.
@@ -311,7 +265,9 @@ public class tableroo extends Application {
         alert.showAndWait();
     }
 
-
+    /**
+     * Añade temporizador al juego
+     */
     private void iniciarTemporizador() {
         timeline.playFromStart();
 
