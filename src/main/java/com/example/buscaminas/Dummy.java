@@ -1,6 +1,5 @@
 package com.example.buscaminas;
 
-import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -10,25 +9,22 @@ import javafx.scene.control.Button;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-import java.util.Random;
-
-public class Ventana2Controller extends Application {
+/**
+ * se define la clase y las vairbeles a utilizar en el modo dummy
+ */
+public class Dummy extends Application {
     private int[][] tablero=
 
     { // Esta es la matriz de casillas que contiene la información del tablero
@@ -53,6 +49,12 @@ public class Ventana2Controller extends Application {
 
     private boolean jugandoContraComputador = true;
     private boolean esTurnoDelJugador = true;
+
+    /**
+     * crea un vBox con 2 Grid panes, uno con el tablero y otro con el nombre del nivel y el temporizador
+     * se crea un boton para cada casilla de la matriz
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Buscaminas");
@@ -104,6 +106,15 @@ public class Ventana2Controller extends Application {
         primaryStage.setScene(new Scene(mainGridPane));
         primaryStage.show();
     }
+
+    /**
+     * funcion que permite manejar los turnos del jugador y el computador, la colocación de banderas, y mostrar las minas adyacentes de la casilla qeu se selecciona
+     * @param button
+     * @param fila
+     * @param columna
+     * @param event
+     * @param jugandoContraComputador
+     */
     private void mostrarContenidoCasilla(Button button, int fila, int columna, MouseEvent event, boolean jugandoContraComputador) {
         descubierta[fila][columna] = true;
         esTurnoDelJugador = !esTurnoDelJugador;
@@ -120,6 +131,8 @@ public class Ventana2Controller extends Application {
                 if (banderasColocadas == 10 && minasEncontradas == 10) {
                     mostrarAlerta("Ganaste", "¡Felicidades! Has colocado todas las banderas necesarias para cubrir todas las minas y ganaste el juego.");
                 }
+                ArduinoCommunication arduinoComm = new ArduinoCommunication();
+                arduinoComm.turnOnLED();
             }
             return;
         }
@@ -184,7 +197,14 @@ public class Ventana2Controller extends Application {
 
     }
 
-    // Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
+
+    /**
+     * Función auxiliar para obtener un nodo (en este caso un botón) desde un GridPane
+     * @param col
+     * @param row
+     * @param gridPane
+     * @return
+     */
     private Node getNodeFromGridPane(int col, int row, GridPane gridPane) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -194,6 +214,12 @@ public class Ventana2Controller extends Application {
         return null;
     }
 
+    /**
+     * inicia un contador con las minas adyacentes de la casilla, llamdo en mostrarContenidoCasilla para hacer el efecto cascada
+     * @param fila
+     * @param columna
+     * @return
+     */
     private int contarMinasAdyacentes(int fila, int columna) {
         int contador = 0;
         for (int i = -1; i <= 1; i++) {
@@ -211,6 +237,13 @@ public class Ventana2Controller extends Application {
     /**
      * Muestra una alerta en la pantalla.
      */
+    /**
+     * /**
+     * Muestra una alerta en la pantalla cuando el jugador gana o pierde
+     *
+     * @param titulo
+     * @param mensaje
+     */
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -219,7 +252,9 @@ public class Ventana2Controller extends Application {
         alert.showAndWait();
     }
 
-
+    /**
+     * inicia el temporizador
+     */
     private void iniciarTemporizador() {
         timeline.playFromStart();
 

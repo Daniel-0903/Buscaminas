@@ -5,13 +5,11 @@ import javafx.animation.Timeline;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,24 +19,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 import static javafx.application.Application.launch;
 
-public class tableroo extends Application {
+/**
+ * se define la clase y las variables a utilizar, además de instanciar el objeto Grid
+ */
+public class Advanced extends Application {
     Grid tablero = new Grid(8, 8, 10);
 
     private Timeline timeline;
-    private int filas;
-    //private boolean[][] descubierta = new boolean[8][8];
 
     private boolean perdio = false; // Variable que indica si el usuario ha perdido
-    //private int casillasRestantes = tablero.length * tablero[0].length - 10; // Variable que lleva la cuenta de las casillas restantes por descubrir
     private int segundosTranscurridos = 0;
     private int banderasColocadas = 0; // Variable que lleva la cuenta de las banderas colocadas
     private int minasEncontradas = 0; // Variable que lleva la cuenta de las minas encontradas
@@ -51,7 +45,12 @@ public class tableroo extends Application {
     Lista listaSegura = new Lista();
     Lista listaIncertidumbre = new Lista();
 
-
+    /**
+     * crea un vBox con 2 Grid panes, uno con el tablero y otro con el nombre del nivel y el temporizador
+     *  se crea un boton para cada casilla de la matriz
+     * inicia el temporizador
+     * @param primaryStage
+     */
     @Override
 
     public void start(Stage primaryStage) {
@@ -105,7 +104,12 @@ public class tableroo extends Application {
         primaryStage.show();
     }
 
-
+    /**
+     * maneja el turno de cada jugador, poner las banderas y las listas
+     * @param tablero
+     * @param random
+     * @param turno
+     */
     public void Turno(Grid tablero, Random random, boolean turno) {
         if (!turno) {
             for (int i = 0; i < 8; i++) {
@@ -233,21 +237,20 @@ public class tableroo extends Application {
 
             } else {
                 System.out.println("No hay bomba, se supone");
-                Nodo Nodote_refo = listaSegura.searchRand();
-                int[] nodote_refo = new int[2];
-                nodote_refo[0] = Nodote_refo.get_X();
-                nodote_refo[1] = Nodote_refo.get_Y();
+                Nodo Nodo_pos = listaSegura.searchRand();
+                int[] node = new int[2];
+                node[0] = Nodo_pos.get_X();
+                node[1] = Nodo_pos.get_Y();
 
-                int x_refo = nodote_refo[0];
-                int y_refo = nodote_refo[1];
-                botmatriz[x_refo][y_refo].setDisable(true);
+                int x = node[0];
+                int y = node[1];
+                botmatriz[x][y].setDisable(true);
                 tablero.generarNumAdy();
-                if (tablero.casillaTablero[x_refo][y_refo].getNumMinasAlrededor() != 0) {
-                    System.out.println("Entro al if");
+                if (tablero.casillaTablero[x][y].getNumMinasAlrededor() != 0) {
 
-                    tablero.casillaTablero[x_refo][y_refo].setText(tablero.casillaTablero[x_refo][y_refo].getNumMinasAlrededor() + "");
+                    tablero.casillaTablero[x][y].setText(tablero.casillaTablero[x][y].getNumMinasAlrededor() + "");
                 }
-                tablero.revelarCeldasSinPistas(x_refo, y_refo);
+                tablero.revelarCeldasSinPistas(x, y);
                 esTurnoDelJugador=false;
                 Turno(tablero, random, esTurnoDelJugador);
             }
@@ -255,7 +258,9 @@ public class tableroo extends Application {
         }}
 
     /**
-     * Muestra una alerta en la pantalla.
+     *Muestra una alerta en la pantalla cuando el jugador gana o pierde
+     * @param titulo
+     * @param mensaje
      */
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -266,7 +271,7 @@ public class tableroo extends Application {
     }
 
     /**
-     * Añade temporizador al juego
+     * inicia el temporizador
      */
     private void iniciarTemporizador() {
         timeline.playFromStart();

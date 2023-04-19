@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="820c2790-4be4-4f2d-bf4e-a62b8cceb66b" name="Changes" comment="commit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Lista.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Pila.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/ArduinoCommunication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Casilla.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Casilla.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/CeldasDisponibles.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Grid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Nodo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Nodo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/tableroo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/tableroo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Dummy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/VentanaPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/VentanaPrincipal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/tableroo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/buscaminas/Advanced.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,9 +46,16 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/dgonz/OneDrive/Escritorio/TEC/III SEMESTRE/DATOS I/Buscaminas/src/main/resources/com/example/buscaminas/hello-view.fxml"
+    "last_opened_file_path": "C:/Users/dgonz/OneDrive/Escritorio/TEC/III SEMESTRE/DATOS I/Buscaminas/src/main/resources/com/example/buscaminas/hello-view.fxml",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   },
   "keyToStringList": {
     "ChangesTree.GroupingKeys": [
@@ -162,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681438503506</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="commit">
+      <created>1681877451096</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1681877451096</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -202,8 +215,8 @@
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/buscaminas/Ventana2Controller.java</url>
-          <line>214</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/buscaminas/Dummy.java</url>
+          <line>217</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>

@@ -8,6 +8,12 @@ public class Grid {
     int numColumnas;
     int numMinas;
 
+    /**
+     * teblero
+     * @param numFilas
+     * @param numColumnas
+     * @param numMinas
+     */
     public Grid(int numFilas, int numColumnas, int numMinas) {
         this.numFilas = 8;
         this.numColumnas = 8;
@@ -16,6 +22,9 @@ public class Grid {
 
     }
 
+    /**
+     * inicializa el tablero
+     */
     public void inicializar() {
         casillaTablero = new Casilla[this.numFilas][this.numColumnas];
         for (int i = 0; i < casillaTablero.length; i++) {
@@ -26,6 +35,9 @@ public class Grid {
         ponerMinas();
     }
 
+    /**
+     * coloca las minas de manera aleatoria
+     */
     private void ponerMinas() {
         int cantMinas = 0;
         while (cantMinas != numMinas) {
@@ -39,15 +51,18 @@ public class Grid {
 
     }
 
+    /**
+     *
+     * @param fila
+     * @param columna
+     */
     public void revelarCeldasSinPistas(int fila, int columna){
 
         if (fila < 0 || columna < 0 || fila >= 8 || columna >= 8) {  //Si está fuera del tablero retorne nada
-            System.out.println("termina1");
             return;
         }
 
         if (casillaTablero[fila][columna].isAbierta()) {  //Si la celda fue relevada salga de la ejecucion
-            System.out.println("termina2");
             return;
         }
 
@@ -57,14 +72,11 @@ public class Grid {
             casillaTablero[fila][columna].abrir();
             casillaTablero[fila][columna].setText(casillaTablero[fila][columna].getNumMinasAlrededor()+"");
             casillaTablero[fila][columna].setDisable(true);
-            System.out.println("termina3");
             return;
         }
 
         casillaTablero[fila][columna].abrir();  //Se marca la celda como revelada
-        casillaTablero[fila][columna].setStyle("-fx-background-color: #FFFF00");  //Se le asigna un color
         casillaTablero[fila][columna].setDisable(true);
-        System.out.println("termina4");
 
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -74,13 +86,16 @@ public class Grid {
                 revelarCeldasSinPistas(fila + i, columna + j);
             }
         }
-        //System.out.println("tambien entra aqui");
 
     }
 
 
-
-
+    /**
+     * posicion de la casilla
+     * @param i
+     * @param j
+     * @return
+     */
     public boolean pos(int i ,int j){
         if(i>=0&&j>=0&&i<=7&&j<=7){
             return true;
@@ -91,60 +106,57 @@ public class Grid {
 
 
     /**
-     * Se generan los numeros de minas
-     * adyacentes y se agregan a la variable
-     * numrev en la matriz de valores. Esto
-     * se hace para todos los espacios en la matriz.
+     * MINAS adyacentes
      */
-    public void generarNumAdy() { // genera los numeros de minas adyacentes y los añade a matrizvalores.numrev
+    public void generarNumAdy() {
         for (int i=0; i<=7; i++) {
             for (int j=0; j<=7; j++) { // indices para recorrer la matriz
                 int contador = 0;
-                if (!casillaTablero[i][j].isMina()) { // si no hay una mina en el espacio
-                    if (pos(i-1, j-1)) { // si el espacio de arriba a la izquierda no se sale del arreglo
-                        if (casillaTablero[i-1][j-1].isMina()) { // si el espacio de arriba a la izquierda es una mina
-                            contador++; // se aumenta el contador
+                if (!casillaTablero[i][j].isMina()) {
+                    if (pos(i-1, j-1)) {
+                        if (casillaTablero[i-1][j-1].isMina()) { // arriba  izquierda
+                            contador++;
                         }
                     }
-                    if (pos(i-1, j)) { // si el espacio de arriba no se sale del arreglo
-                        if (casillaTablero[i-1][j].isMina()) { // si el espacio de arriba es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i-1, j)) {
+                        if (casillaTablero[i-1][j].isMina()) { //arriba
+                            contador++;
                         }
                     }
-                    if (pos(i-1, j+1)) { // si el espacio de arriba a la derecha no se sale del arreglo
-                        if (casillaTablero[i-1][j+1].isMina()) { // si el espacio de arriba a la derecha es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i-1, j+1)) {
+                        if (casillaTablero[i-1][j+1].isMina()) { //arriba derecha
+                            contador++;
                         }
                     }
-                    if (pos(i, j-1)) { // si el espacio de la izquierda no se sale del arreglo
-                        if (casillaTablero[i][j-1].isMina()) { // si el espacio de la izquierda es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i, j-1)) {
+                        if (casillaTablero[i][j-1].isMina()) { //izquierda
+                            contador++;
                         }
                     }
-                    if (pos(i, j+1)) { // si el espacio de la derecha no se sale del arreglo
-                        if (casillaTablero[i][j+1].isMina()) { // si el espacio de la derecha es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i, j+1)) {
+                        if (casillaTablero[i][j+1].isMina()) { //derecha
+                            contador++;
                         }
                     }
-                    if (pos(i+1, j-1)) { // si el espacio de abajo a la izquierda no se sale del arreglo
-                        if (casillaTablero[i+1][j-1].isMina()) { // si el espacio de abajo a la izquierda es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i+1, j-1)) {
+                        if (casillaTablero[i+1][j-1].isMina()) { // abajo  izquierda
+                            contador++;
                         }
                     }
-                    if (pos(i+1, j)) { // si el espacio de abajo no se sale del arreglo
-                        if (casillaTablero[i+1][j].isMina()) { // si el espacio de abajo es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i+1, j)) {
+                        if (casillaTablero[i+1][j].isMina()) { // abajo
+                            contador++;
                         }
                     }
-                    if (pos(i+1, j+1)) { // si el espacio de abajo a la derecha no se sale del arreglo
-                        if (casillaTablero[i+1][j+1].isMina()) { // si el espacio de abajo a la derecha es una mina
-                            contador++; // se aumenta el contador
+                    if (pos(i+1, j+1)) {
+                        if (casillaTablero[i+1][j+1].isMina()) { // abajo  derecha
+                            contador++;
                         }
                     }
-                    casillaTablero[i][j].setMinasAlrededor(contador); // se asigna el contador a la variable numrev en la matriz de valores
+                    casillaTablero[i][j].setMinasAlrededor(contador);
                 }
-                else if (casillaTablero[i][j].isMina()){ // si el espacio es una mina
-                    casillaTablero[i][j].setMinasAlrededor(-333); // se le asigna un -333 para representar que hay una mina
+                else if (casillaTablero[i][j].isMina()){
+                    casillaTablero[i][j].setMinasAlrededor(-1); // se le asigna un -1 para representar que hay una mina
                 }
             }
         }

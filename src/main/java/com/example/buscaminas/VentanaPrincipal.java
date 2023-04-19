@@ -11,7 +11,10 @@ import javafx.stage.Stage;
 
 public class VentanaPrincipal extends Application {
 
-    //@Override
+    /**
+     * crea la ventana princiapl con 2 botones para jugar en dummy o advanced
+     * @param primaryStage
+     */
     public void start(Stage primaryStage) {
 
         // Configuración de la ventana principal
@@ -27,7 +30,7 @@ public class VentanaPrincipal extends Application {
         boton1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Ventana2Controller dummy = new Ventana2Controller();
+                Dummy dummy = new Dummy();
                 dummy.start(primaryStage);
             }
         });
@@ -35,7 +38,7 @@ public class VentanaPrincipal extends Application {
         boton2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                tableroo advanced = new tableroo();
+                Advanced advanced = new Advanced();
                 advanced.start(primaryStage);
             }
         });
@@ -54,6 +57,10 @@ public class VentanaPrincipal extends Application {
         primaryStage.show();
     }
 
+    /**
+     * main
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
